@@ -15,7 +15,7 @@ public interface DriverRepository extends JpaRepository<Driver,Long> {
 
     @Override
     Optional<Driver> findById(Long id);
-    
+
     Optional<Driver> findByIdAndLicenceNumber(Long id, String licenceNumber);
 
     @Query(nativeQuery = true, value = "SELECT * FROM Driver WHERE id=:id AND licence_number=:licenceNumber")
@@ -24,5 +24,9 @@ public interface DriverRepository extends JpaRepository<Driver,Long> {
     @Query("FROM Driver as d WHERE d.id=:id AND d.licenceNumber=:licenceNumber")
     Optional<Driver> rawFindByIdAndLicence(Long id, String licenceNumber);
 
-    
+    List<Driver> findAllByIdIn(List<Long> driverIds);
+
+
+
+
 }

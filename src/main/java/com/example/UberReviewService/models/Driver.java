@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class Driver extends BaseModel{
     private String licenceNumber;
 
     //driver has any bookings - oneToMany
+    //N+1 query problem
     @OneToMany(mappedBy = "driver",fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Booking>bookings = new ArrayList<>() ;
 }

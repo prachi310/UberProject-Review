@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking,Long> {
     List<Booking> findAllByDriverId(Long id);
+
+    List<Booking> findAllByIdIn(List<Long> drivers);
 }
