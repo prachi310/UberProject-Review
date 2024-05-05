@@ -16,13 +16,13 @@ public interface DriverRepository extends JpaRepository<Driver,Long> {
     @Override
     Optional<Driver> findById(Long id);
 
-    Optional<Driver> findByIdAndLicenceNumber(Long id, String licenceNumber);
+    Optional<Driver> findByIdAndLicenseNumber(Long id, String licenseNumber);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM Driver WHERE id=:id AND licence_number=:licenceNumber")
-    Optional<Driver> rawFindByIdAndLicenceNumber(Long id , String licenceNumber);
+    @Query(nativeQuery = true, value = "SELECT * FROM Driver WHERE id=:id AND license_number=:licenseNumber")
+    Optional<Driver> rawFindByIdAndLicenseNumber(Long id , String licenseNumber);
 
-    @Query("FROM Driver as d WHERE d.id=:id AND d.licenceNumber=:licenceNumber")
-    Optional<Driver> rawFindByIdAndLicence(Long id, String licenceNumber);
+    @Query("FROM Driver as d WHERE d.id=:id AND d.licenseNumber=:licenseNumber")
+    Optional<Driver> rawFindByIdAndLicense(Long id, String licenseNumber);
 
     List<Driver> findAllByIdIn(List<Long> driverIds);
 

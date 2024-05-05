@@ -17,10 +17,10 @@ public class Review extends BaseModel {
     @Column(nullable = false)
     private String content;
 
-    private double ratings;
+    private double rating;
 
     @Override
     public String toString(){
-        return "Review as" +this.content +" "+this.ratings +" "+ this.createdAt;
+        return "Review as" +this.content +" "+this.rating +" "+ this.createdAt;
     }
 }

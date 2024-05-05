@@ -19,10 +19,12 @@ import java.util.List;
 @Entity
 public class Driver extends BaseModel{
 
-    private String driverName;
+    private String name;
+
+    private String phoneNumber;
 
     @Column(nullable = false,unique = true)
-    private String licenceNumber;
+    private String licenseNumber;
 
     //driver has any bookings - oneToMany
     //N+1 query problem

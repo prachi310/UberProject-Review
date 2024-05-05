@@ -31,6 +31,9 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.20'
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+	implementation 'org.flywaydb:flyway-mysql:8.4.4'
+
 }
 
 tasks.named('test') {
