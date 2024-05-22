@@ -17,8 +17,5 @@ public interface ReviewService {
 
     public Review publishReview(Review review) throws Exception;
 
-    public Review UpdateReview(Long id , Review review) throws Exception;
-
-
-
+    Review updateReview(Long id, Review newReviewData) throws Exception;
 }

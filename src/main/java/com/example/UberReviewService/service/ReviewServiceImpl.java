@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class ReviewServiceImpl implements ReviewService{
 
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
     public ReviewServiceImpl(ReviewRepository reviewRepository){
         this.reviewRepository =reviewRepository;
@@ -69,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public Review UpdateReview(Long id, Review newReviewData) throws Exception {
+    public Review updateReview(Long id, Review newReviewData) throws Exception {
         try {
             Review review = this.reviewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
             Double Rating = newReviewData.getRating();
@@ -81,7 +81,7 @@ public class ReviewServiceImpl implements ReviewService{
             }
             return this.reviewRepository.save(review);
         }catch (Exception anyException){
-            throw new Exception("Exception while updating the Recview :"
+            throw new Exception("Exception while updating the Review :"
                     + anyException.getMessage());
         }
     }
