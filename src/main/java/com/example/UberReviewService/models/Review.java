@@ -1,5 +1,6 @@
 package com.example.UberReviewService.models;
 
+import com.example.UberReviewService.adapters.CreateReviewDtoToReviewAdapter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,12 +15,13 @@ import lombok.*;
 @Table(name = "Booking_Review")
 public class Review extends BaseModel {
 
+
     @Column(nullable = false)
     private String content;
 
     private double rating;
 
-    @OneToOne( cascade = {CascadeType.ALL})
+    @OneToOne( cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
     private Booking booking;
 
     @Override

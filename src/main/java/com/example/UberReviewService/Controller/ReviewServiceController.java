@@ -1,7 +1,12 @@
 package com.example.UberReviewService.Controller;
 
+import com.example.UberReviewService.DTO.CreateReviewDto;
+import com.example.UberReviewService.DTO.ReviewResponseDto;
+import com.example.UberReviewService.adapters.CreateReviewDtoToReviewAdapter;
+import com.example.UberReviewService.adapters.CreateReviewResponseDto;
 import com.example.UberReviewService.models.Review;
 import com.example.UberReviewService.service.ReviewService;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +20,30 @@ public class ReviewServiceController {
 
     private final ReviewService reviewService;
 
-    private ReviewServiceController(ReviewService reviewService) {
+    private CreateReviewDtoToReviewAdapter createReviewDtoToReviewAdapter;
+
+    private CreateReviewResponseDto reviewResponseDto;
+
+    private ReviewServiceController(ReviewService reviewService,
+                                    CreateReviewDtoToReviewAdapter createReviewDtoToReviewAdapter,
+                                    CreateReviewResponseDto reviewResponseDto) {
         this.reviewService=reviewService;
-    }
+        this.createReviewDtoToReviewAdapter=createReviewDtoToReviewAdapter;
+        this.reviewResponseDto= reviewResponseDto;
+            }
 
     @PostMapping
-    public ResponseEntity<?> publishReview(@RequestBody Review newReview) throws Exception {
+    public ResponseEntity<?> publishReview(@RequestBody CreateReviewDto newReview) throws Exception {
 
         try {
-            Review review = reviewService.publishReview(newReview);
-            return new ResponseEntity<>(review, HttpStatus.CREATED);
+            Review incomingReview =this.createReviewDtoToReviewAdapter.convertDto(newReview);
+            if(incomingReview == null){
+                new ResponseEntity<>("Invalid Arguments",HttpStatus.BAD_REQUEST);
+            }
+
+            Review review = reviewService.publishReview(incomingReview);
+            ReviewResponseDto responseDto= reviewResponseDto.createResponseDTO(Optional.ofNullable(review));
+            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         }catch (Exception anyException){
             if(newReview.getContent()==null)
                 return new ResponseEntity<>("content can't be null", HttpStatus.BAD_REQUEST);
@@ -37,7 +56,8 @@ public class ReviewServiceController {
     public ResponseEntity<?> findReviewById(@PathVariable Long reviewId) {
        try {
            Optional<Review> review= reviewService.findReviewById(reviewId);
-           return new ResponseEntity<>(review, HttpStatus.OK);
+           ReviewResponseDto responseDto = reviewResponseDto.createResponseDTO(review);
+           return new ResponseEntity<>(responseDto, HttpStatus.OK);
        } catch (Exception anyException) {
            return new ResponseEntity<>(anyException.getMessage(),HttpStatus.NOT_FOUND);
        }
@@ -48,7 +68,8 @@ public class ReviewServiceController {
     {
         try {
             List<Review> reviews = reviewService.findAllReviews();
-            return new ResponseEntity<>(reviews, HttpStatus.OK);
+            List<ReviewResponseDto> reviewResponseDtos = reviewResponseDto.createResponseDto(reviews);
+            return new ResponseEntity<>(reviewResponseDtos, HttpStatus.OK);
         } catch (Exception anyException) {
             return new ResponseEntity<>(anyException.getMessage(),HttpStatus.NO_CONTENT);
         }

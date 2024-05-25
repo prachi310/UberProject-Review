@@ -3,6 +3,7 @@ package com.example.UberReviewService.service;
 import com.example.UberReviewService.models.Review;
 import com.example.UberReviewService.repositories.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,6 +58,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
+    @Transactional
     public Review publishReview(Review review) throws Exception {
         try{
 
