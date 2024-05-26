@@ -4,6 +4,8 @@ import com.example.UberReviewService.models.Review;
 import com.example.UberReviewService.repositories.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Optional;
 @Service
 public class ReviewServiceImpl implements ReviewService{
 
+    private static final Logger log = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewRepository reviewRepository;
 
     public ReviewServiceImpl(ReviewRepository reviewRepository){
@@ -58,14 +61,14 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    @Transactional
     public Review publishReview(Review review) throws Exception {
         try{
-
+            log.info("adding Review with Review Id : {}", review.getId());
             return reviewRepository.save(review);
         }catch (Exception anyException)
         {
-            throw new Exception("Exception while publishing the Recview :"
+            log.error("Exception while saving Review : " +anyException.getMessage());
+            throw new Exception("Exception while publishing the Review :"
                     + anyException.getMessage());
         }
     }

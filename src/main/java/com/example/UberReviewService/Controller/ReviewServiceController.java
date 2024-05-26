@@ -6,7 +6,7 @@ import com.example.UberReviewService.adapters.CreateReviewDtoToReviewAdapter;
 import com.example.UberReviewService.adapters.CreateReviewResponseDto;
 import com.example.UberReviewService.models.Review;
 import com.example.UberReviewService.service.ReviewService;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/review")
 public class ReviewServiceController {
@@ -38,15 +39,19 @@ public class ReviewServiceController {
         try {
             Review incomingReview =this.createReviewDtoToReviewAdapter.convertDto(newReview);
             if(incomingReview == null){
-                new ResponseEntity<>("Invalid Arguments",HttpStatus.BAD_REQUEST);
+                log.error("Review cannot exist without booking");
+                return new ResponseEntity<>("booking doesn't exist for the given id",
+                        HttpStatus.BAD_REQUEST);
             }
-
             Review review = reviewService.publishReview(incomingReview);
             ReviewResponseDto responseDto= reviewResponseDto.createResponseDTO(Optional.ofNullable(review));
+            log.info("Successfully added Review {}",responseDto);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         }catch (Exception anyException){
-            if(newReview.getContent()==null)
+            if(newReview.getContent()==null) {
+                log.error("content must not be null for Review");
                 return new ResponseEntity<>("content can't be null", HttpStatus.BAD_REQUEST);
+            }
             return  new ResponseEntity<>(anyException.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
